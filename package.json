@@ -1,0 +1,28 @@
+{
+  "name": "projectresource",
+  "version": "1.0.0",
+  "description": "file system for the coder",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/W4153WASMCoder/ProjectResource.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/W4153WASMCoder/ProjectResource/issues"
+  },
+  "homepage": "https://github.com/W4153WASMCoder/ProjectResource#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1691.0",
+    "debug": "^4.3.7",
+    "express": "^4.21.1",
+    "mysql": "^2.18.1",
+    "path": "^0.12.7",
+    "projectresource": "file:",
+    "uuid": "^10.0.0"
+  }
+}
