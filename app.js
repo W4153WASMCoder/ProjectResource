@@ -5,7 +5,7 @@ var connection = mysql.createConnection({
     host: 'wasm-coder-project.c5is6oc4czys.us-east-2.rds.amazonaws.com',
     port: '3306',
     user: 'admin',
-    password: 'u*H1%wUv45q'
+    password: process.env.WASM_CODER_PROJ_RESOURCE
 });
 
 var app = express();
