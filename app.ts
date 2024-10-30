@@ -9,6 +9,7 @@ import { generate_routes } from "./routes/router.js";
 import project_router from "./routes/projects.js";
 import project_files_router from "./routes/project_files.js";
 import swagger from "./swagger.js";
+import pool from "./db.js";
 import type { Express } from "express";
 
 // Load environment variables from .env file

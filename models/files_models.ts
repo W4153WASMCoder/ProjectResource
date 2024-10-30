@@ -83,7 +83,7 @@ export class Project {
         }
 
         if (filters.OwningUserID !== undefined) {
-            filterClauses += " AND owner_user_id = ?";
+            filterClauses += " AND owning_user_id = ?";
             filterValues.push(filters.OwningUserID);
         }
 
@@ -129,7 +129,7 @@ export class Project {
         if (this.ProjectID) {
             // Update existing project
             await pool.query(
-                "UPDATE Project SET owner_user_id = ?, project_name = ?, creation_date = ? WHERE project_id = ?",
+                "UPDATE Project SET owning_user_id = ?, project_name = ?, creation_date = ? WHERE project_id = ?",
                 [
                     this._owningUserID,
                     this._projectName,
@@ -140,7 +140,7 @@ export class Project {
         } else {
             // Insert new project and get the ID
             const [result]: any = await pool.query(
-                "INSERT INTO Project (owner_user_id, project_name, creation_date) VALUES (?, ?, ?)",
+                "INSERT INTO Project (owning_user_id, project_name, creation_date) VALUES (?, ?, ?)",
                 [this._owningUserID, this._projectName, this._creationDate],
             );
             this.ProjectID = result.insertId;
@@ -317,7 +317,7 @@ export class ProjectFile {
         }
 
         if (filters.IsDirectory !== undefined) {
-            filterClauses += " AND is_dir = ?";
+            filterClauses += " AND is_directory = ?";
             filterValues.push(filters.IsDirectory ? 1 : 0);
         }
 
@@ -326,7 +326,7 @@ export class ProjectFile {
             "file_id",
             "file_name",
             "create_date",
-            "is_dir",
+            "is_directory",
         ];
         if (!validSortFields.includes(sort)) {
             throw new Error(`Invalid sort field: ${sort}`);
@@ -386,7 +386,7 @@ export class ProjectFile {
         if (this.FileID) {
             // Update existing file
             await pool.query(
-                "UPDATE project_files SET project_id = ?, parent_dir = ?, file_name = ?, is_dir = ?, creation_date = ? WHERE file_id = ?",
+                "UPDATE project_files SET project_id = ?, parent_directory = ?, file_name = ?, is_directory = ?, creation_date = ? WHERE file_id = ?",
                 [
                     this._projectID,
                     this._parentDirectory,
@@ -399,7 +399,7 @@ export class ProjectFile {
         } else {
             // Insert new file and get the ID
             const [result]: any = await pool.query(
-                "INSERT INTO project_files (project_id, parent_dir, file_name, is_dir, creation_date) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO project_files (project_id, parent_directory, file_name, is_directory, creation_date) VALUES (?, ?, ?, ?, ?)",
                 [
                     this._projectID,
                     this._parentDirectory,
@@ -453,7 +453,7 @@ export class ProjectFile {
         };
         try {
             const [rows] = await pool.query<RowDataPacket[]>(
-                "SELECT * FROM project_files JOIN projects using (project_id) WHERE project_files.project_id=? AND owner_user_id=? AND file_id=?",
+                "SELECT * FROM project_files JOIN projects using (project_id) WHERE project_files.project_id=? AND owning_user_id=? AND file_id=?",
                 [TargetProjectID, OwnerUserID, TargetFileID],
             );
 
