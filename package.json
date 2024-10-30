@@ -1,28 +1,33 @@
 {
-  "name": "projectresource",
-  "version": "1.0.0",
-  "description": "file system for the coder",
-  "main": "app.js",
-  "scripts": {
-    "start": "node ./bin/www"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/W4153WASMCoder/ProjectResource.git"
-  },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/W4153WASMCoder/ProjectResource/issues"
-  },
-  "homepage": "https://github.com/W4153WASMCoder/ProjectResource#readme",
-  "dependencies": {
-    "aws-sdk": "^2.1691.0",
-    "debug": "^4.3.7",
-    "express": "^4.21.1",
-    "mysql": "^2.18.1",
-    "path": "^0.12.7",
-    "projectresource": "file:",
-    "uuid": "^10.0.0"
-  }
+    "name": "app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.ts",
+    "type": "module",
+    "scripts": {
+        "build": "npx tsc",
+        "start": "node dist/app.js",
+        "dev": "ts-node-dev --respawn --transpile-only app.ts"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "dotenv": "^10.0.0",
+        "express": "^4.17.1",
+        "express-static": "^1.2.6",
+        "fs": "^0.0.1-security",
+        "mysql2": "^3.11.3",
+        "nodemon": "^3.1.7",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1"
+    },
+    "devDependencies": {
+        "@types/cors": "^2.8.17",
+        "@types/express": "^5.0.0",
+        "@types/swagger-jsdoc": "^6.0.4",
+        "@types/swagger-ui-express": "^4.1.6",
+        "ts-node-dev": "^2.0.0",
+        "typescript": "^5.6.3"
+    }
 }
