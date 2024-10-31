@@ -38,16 +38,12 @@ export class Project {
 
             if (rows.length === 0) return null;
 
-            const { OwningUserID, ProjectName, CreationDate } = rows[0] as {
-                OwningUserID: number;
-                ProjectName: string;
-                CreationDate: Date;
-            };
+            const { owning_user_id, project_name, creation_date } = rows[0];
             return new Project(
                 ProjectID,
-                OwningUserID,
-                ProjectName,
-                new Date(CreationDate),
+                owning_user_id,
+                project_name,
+                new Date(creation_date),
             );
         } catch (error) {
             console.error(
@@ -106,13 +102,13 @@ export class Project {
             ]);
 
             const projects = rows.map((row) => {
-                const { ProjectID, OwningUserID, ProjectName, CreationDate } =
+                const { project_id, owning_user_id, project_name, creation_date } =
                     row;
                 return new Project(
-                    ProjectID,
-                    OwningUserID,
-                    ProjectName,
-                    new Date(CreationDate),
+                    project_id,
+                    owning_user_id,
+                    project_name,
+                    new Date(creation_date),
                 );
             });
 
@@ -250,33 +246,33 @@ export class ProjectFile {
 
             if (rows.length === 0) return null;
 
+            console.log(rows);
+
             const {
-                _,
-                ProjectID,
-                ParentDirectory,
-                FileName,
-                IsDirectory,
-                CreationDate,
+                project_id,
+                parent_directory,
+                file_name,
+                is_directory,
+                creation_date,
             } = rows[0] as {
-                _: number;
-                ProjectID: number;
-                ParentDirectory: number | null;
-                FileName: string;
-                IsDirectory: boolean;
-                CreationDate: string;
+                project_id: number;
+                parent_directory: number | null;
+                file_name: string;
+                is_directory: boolean;
+                creation_date: string;
             };
 
             console.log(rows[0]);
 
-            console.log("CreationDate: %s", CreationDate);
+            console.log("CreationDate: %s", creation_date);
 
             return new ProjectFile(
                 FileID,
-                ProjectID,
-                ParentDirectory,
-                FileName,
-                !!IsDirectory,
-                new Date(CreationDate),
+                project_id,
+                parent_directory,
+                file_name,
+                !!is_directory,
+                new Date(creation_date),
             );
         } catch (error) {
             console.error(
@@ -359,24 +355,28 @@ export class ProjectFile {
                 offset,
             ]);
 
+            console.log(rows);
+
             const files = rows.map((row) => {
                 const {
-                    FileID,
-                    ProjectID,
-                    ParentDirectory,
-                    FileName,
-                    IsDirectory,
-                    CreationDate,
+                    file_id,
+                    project_id,
+                    parent_directory,
+                    file_name,
+                    is_directory,
+                    creation_date,
                 } = row;
                 return new ProjectFile(
-                    FileID,
-                    ProjectID,
-                    ParentDirectory,
-                    FileName,
-                    !!IsDirectory,
-                    new Date(CreationDate),
+                    file_id,
+                    project_id,
+                    parent_directory,
+                    file_name,
+                    !!is_directory,
+                    new Date(creation_date),
                 );
             });
+
+            console.log(files);
 
             return { files, total };
         } catch (error) {
@@ -464,30 +464,30 @@ export class ProjectFile {
             if (rows.length === 0) return null;
 
             const {
-                FileID,
-                ProjectID,
-                ParentDirectory,
-                FileName,
-                IsDirectory,
-                CreationDate,
+                file_id,
+                project_id,
+                parent_directory,
+                file_name,
+                is_directory,
+                creation_date,
             } = rows[0] as {
-                FileID: number,
-                ProjectID: number;
-                ParentDirectory: number | null;
-                FileName: string;
-                IsDirectory: boolean;
-                CreationDate: Date;
+                file_id: number,
+                project_id: number;
+                parent_directory: number | null;
+                file_name: string;
+                is_directory: boolean;
+                creation_date: Date;
             };
 
             console.log(rows);
 
             return new ProjectFile(
-                FileID,
-                ProjectID,
-                ParentDirectory,
-                FileName,
-                !!IsDirectory,
-                new Date(CreationDate),
+                file_id,
+                project_id,
+                parent_directory,
+                file_name,
+                !!is_directory,
+                new Date(creation_date),
             );
 
         } catch (error) {
