@@ -32,7 +32,7 @@ export class Project {
     static async find(ProjectID: number): Promise<Project | null> {
         try {
             const [rows] = await pool.query<RowDataPacket[]>(
-                "SELECT * FROM Projects WHERE project_id = ?",
+                "SELECT * FROM projects WHERE project_id = ?",
                 [ProjectID],
             );
 
@@ -87,8 +87,8 @@ export class Project {
             filterValues.push(filters.OwningUserID);
         }
 
-        const totalQuery = `SELECT COUNT(*) as total FROM Projects WHERE 1=1${filterClauses}`;
-        const dataQuery = `SELECT * FROM Projects WHERE 1=1${filterClauses} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`;
+        const totalQuery = `SELECT COUNT(*) as total FROM projects WHERE 1=1${filterClauses}`;
+        const dataQuery = `SELECT * FROM projects WHERE 1=1${filterClauses} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`;
 
         try {
             // Get total count
@@ -129,7 +129,7 @@ export class Project {
         if (this.ProjectID) {
             // Update existing project
             await pool.query(
-                "UPDATE Project SET owning_user_id = ?, project_name = ?, creation_date = ? WHERE project_id = ?",
+                "UPDATE projects SET owning_user_id = ?, project_name = ?, creation_date = ? WHERE project_id = ?",
                 [
                     this._owningUserID,
                     this._projectName,
@@ -140,7 +140,7 @@ export class Project {
         } else {
             // Insert new project and get the ID
             const [result]: any = await pool.query(
-                "INSERT INTO Project (owning_user_id, project_name, creation_date) VALUES (?, ?, ?)",
+                "INSERT INTO projects (owning_user_id, project_name, creation_date) VALUES (?, ?, ?)",
                 [this._owningUserID, this._projectName, this._creationDate],
             );
             this.ProjectID = result.insertId;
@@ -153,7 +153,7 @@ export class Project {
         try {
             // Check if file exists
             const [rows] = await pool.query<RowDataPacket[]>(
-                "SELECT * FROM Project WHERE project_id = ?",
+                "SELECT * FROM projects WHERE project_id = ?",
                 [id],
             );
 
@@ -163,7 +163,7 @@ export class Project {
             }
 
             // Proceed to delete the user
-            await pool.query("DELETE FROM Project WHERE project_id = ?", [id]);
+            await pool.query("DELETE FROM projects WHERE project_id = ?", [id]);
             return true;
         } catch (error) {
             // Log the error for debugging
@@ -251,20 +251,24 @@ export class ProjectFile {
             if (rows.length === 0) return null;
 
             const {
+                _,
                 ProjectID,
                 ParentDirectory,
                 FileName,
                 IsDirectory,
                 CreationDate,
             } = rows[0] as {
+                _: number;
                 ProjectID: number;
                 ParentDirectory: number | null;
                 FileName: string;
                 IsDirectory: boolean;
-                CreationDate: Date;
+                CreationDate: string;
             };
 
             console.log(rows[0]);
+
+            console.log("CreationDate: %s", CreationDate);
 
             return new ProjectFile(
                 FileID,
