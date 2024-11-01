@@ -356,8 +356,6 @@ export class ProjectFile {
                 offset,
             ]);
 
-            console.log(rows);
-
             const files = rows.map((row) => {
                 const {
                     file_id,
@@ -376,8 +374,6 @@ export class ProjectFile {
                     new Date(creation_date),
                 );
             });
-
-            console.log(files);
 
             return { files, total };
         } catch (error) {
