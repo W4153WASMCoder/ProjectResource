@@ -19,6 +19,7 @@ export class Project {
         this._owningUserID = OwningUserID;
         this._projectName = ProjectName;
         this._creationDate = CreationDate;
+        this._isDirty = ProjectID === null;
     }
     toJSON(): string {
         return JSON.stringify({
