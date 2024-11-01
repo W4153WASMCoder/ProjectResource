@@ -11,7 +11,7 @@ import project_files_router from "./routes/project_files.js";
 import swagger from "./swagger.js";
 import pool from "./db.js";
 import type { Express } from "express";
-
+import { log_init, log_close } from "./middleware/logger.js";
 // Load environment variables from .env file
 dotenv.config();
 
@@ -23,6 +23,7 @@ const httpServer: HttpServer = http.createServer(app);
 //const httpsServer = https.createServer(credentials, app);
 
 //Middleware Definition
+app.use(log_init);
 app.use(express.static("./static"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -31,6 +32,7 @@ generate_routes(app);
 app.use("/projects", project_router);
 app.use("/project_files", project_files_router);
 swagger(app as Express);
+app.use(log_close);
 //End Middleware definition
 //
 //Start Server
