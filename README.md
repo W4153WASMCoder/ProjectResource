@@ -16,8 +16,8 @@ This project is a TypeScript-based Express application for managing resources in
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
-cd <repository-directory>
+git clone https://github.com/W4153WASMCoder/ProjectResource.git
+cd ProjectResource
 ```
 
 ### 2. Set Up Environment Variables
