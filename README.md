@@ -13,14 +13,7 @@ This project is a TypeScript-based Express application for managing resources in
 
 ## Getting Started
 
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/W4153WASMCoder/ProjectResource.git
-cd ProjectResource
-```
-
-### 2. Set Up Environment Variables
+### 1. Set Up Environment Variables
 
 Create a `.env` file in the root directory and add the following details:
 
@@ -34,13 +27,13 @@ PORT=8080
 
 Adjust the values as per your local database configuration.
 
-### 3. Install Dependencies
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 4. Build the Project
+### 3. Build the Project
 
 To compile TypeScript files, run:
 
@@ -50,7 +43,7 @@ npm run build
 
 The compiled JavaScript files will be in the `dist/` folder.
 
-### 5. Run the Application
+### 4. Run the Application
 
 - **Production:** Run the compiled code with Node.js:
   ```bash
@@ -62,7 +55,7 @@ The compiled JavaScript files will be in the `dist/` folder.
   npm run dev
   ```
 
-### 6. Access the API
+### 5. Access the API
 
 Once running, the app is accessible at `http://localhost:8080` (or the port specified in your `.env` file).
 
