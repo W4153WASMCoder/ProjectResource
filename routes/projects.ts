@@ -335,7 +335,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
         ProjectName,
         new Date(),
     );
-    
+
     try {
         await newProject.save();
         const location = `${req.protocol}://${req.get("host")}${req.baseUrl}/${newProject.ProjectID}`;

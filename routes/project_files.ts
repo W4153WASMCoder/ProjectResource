@@ -381,6 +381,7 @@ router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
     }
 });
 
+/*
 router.get("/", async (req: Request, res: Response): Promise<void> => {
     const { ProjectID, OwnerUserID, FileID } = req.body;
     if (OwnerUserID == null || ProjectID == null || FileID == null) {
@@ -403,5 +404,6 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
         res.status(500).send("Internal server error");
     }
 });
+*/
 
 export default router;

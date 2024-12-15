@@ -1,5 +1,6 @@
 import pool from "../db.js";
 import type { RowDataPacket } from "mysql2";
+import { fetchFile, updateFile } from "../s3.js";
 
 export class Project {
     private _isDirty: boolean = false; // Track if the record needs saving
@@ -30,6 +31,7 @@ export class Project {
         });
     }
 
+    //TODO s3 (adds the data to the project file that returns)
     static async find(ProjectID: number): Promise<Project | null> {
         try {
             const [rows] = await pool.query<RowDataPacket[]>(
@@ -120,6 +122,7 @@ export class Project {
         }
     }
     // Save method to insert or update a project if it's dirty
+    //TODO s3
     async save(): Promise<Project> {
         if (!this._isDirty) return this;
 
@@ -146,6 +149,7 @@ export class Project {
         this._isDirty = false;
         return this;
     }
+
     static async deleteById(id: number): Promise<boolean> {
         try {
             // Check if file exists
@@ -209,6 +213,7 @@ export class ProjectFile {
     private _fileName: string;
     private _isDirectory: boolean;
     private _creationDate: Date;
+    private _data: string;
 
     constructor(
         FileID: number | null,
@@ -217,6 +222,7 @@ export class ProjectFile {
         FileName: string,
         IsDirectory: boolean,
         CreationDate: Date,
+        data: string = "",
     ) {
         this.FileID = FileID;
         this._projectID = ProjectID;
@@ -224,6 +230,7 @@ export class ProjectFile {
         this._fileName = FileName;
         this._isDirectory = IsDirectory;
         this._creationDate = CreationDate;
+        this._data = data;
     }
     toJSON(): string {
         return JSON.stringify({
@@ -233,21 +240,44 @@ export class ProjectFile {
             FileName: this._fileName,
             IsDirectory: this._isDirectory,
             CreationDate: this._creationDate,
+            Data: this._data,
         });
     }
 
-    static async find(FileID: number): Promise<ProjectFile | null> {
-        try {
-            console.log("sql query: SELECT * FROM project_files WHERE file_id = %s", FileID);
+    //recursive call findById, get fully qualified path. refactor find for it (maybe a private find). write a s3 function to get the data.
+    private static async find_path(FileID: number): Promise<string | null> {
+        const current_file = await this.find_metadata(FileID);
+        if (current_file == null) return null;
+        const current = current_file!;
+        if (current.ParentDirectory != null) {
+            const parentDir = await this.find_metadata(current.ParentDirectory);
+            if (parentDir == null)
+                return current.FileName;
+            return await this.find_path(parentDir.FileID!) + "/" + current.FileName;
+        }
+        return current.FileName;
+    }
 
+    static async find(FileID: number): Promise<ProjectFile | null> {
+        const metadata = await this.find_metadata(FileID);
+        const path = await this.find_path(FileID);
+        if (metadata == null || path == null) return null;
+        //get data from s3 with the path as the object name
+        const data = await fetchFile(path);
+        //assign metadata's data member to be the data we get from s3 and return metadata after that
+        if (data == null) return metadata;
+        metadata._data = data;
+        return metadata;
+    }
+
+    static async find_metadata(FileID: number): Promise<ProjectFile | null> {
+        try {
             const [rows] = await pool.query<RowDataPacket[]>(
                 "SELECT * FROM project_files WHERE file_id = ?",
                 [FileID],
             );
 
             if (rows.length === 0) return null;
-
-            console.log(rows);
 
             const {
                 project_id,
@@ -262,10 +292,6 @@ export class ProjectFile {
                 is_directory: boolean;
                 creation_date: string;
             };
-
-            console.log(rows[0]);
-
-            console.log("CreationDate: %s", creation_date);
 
             return new ProjectFile(
                 FileID,
@@ -382,8 +408,10 @@ export class ProjectFile {
         }
     }
     async save(): Promise<ProjectFile> {
+        this._isDirty = true;
         if (!this._isDirty) return this;
 
+        console.log(this);
         if (this.FileID) {
             // Update existing file
             await pool.query(
@@ -412,6 +440,10 @@ export class ProjectFile {
             this.FileID = result.insertId;
         }
 
+        const file_path = await ProjectFile.find_path(this.FileID!);
+        //use file_path to lookup the file that needs to be updated, update it with the data member of this file object
+        if (file_path != null)
+            updateFile(file_path, this.data);
         this._isDirty = false;
         return this;
     }
@@ -544,6 +576,16 @@ export class ProjectFile {
         if (value === this._creationDate) return;
 
         this._creationDate = value;
+        this._isDirty = true;
+    }
+
+    get data() {
+        return this._data;
+    }
+    set data(value: string) {
+        if (value === this._data) return;
+
+        this._data = value;
         this._isDirty = true;
     }
 }
