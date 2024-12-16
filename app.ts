@@ -22,6 +22,12 @@ const app: Application = express();
 const httpServer: HttpServer = http.createServer(app);
 //const httpsServer = https.createServer(credentials, app);
 
+declare module "express-serve-static-core" {
+    interface Request {
+        uid?: string;
+    }
+}
+
 //Middleware Definition
 app.use(log_init);
 app.use(express.static("./static"));
