@@ -231,6 +231,7 @@ export class ProjectFile {
         this._isDirectory = IsDirectory;
         this._creationDate = CreationDate;
         this._data = data;
+        this._isDirty = FileID === null;
     }
     toJSON(): string {
         return JSON.stringify({
