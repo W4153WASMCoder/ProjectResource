@@ -31,7 +31,6 @@ export class Project {
         });
     }
 
-    //TODO s3 (adds the data to the project file that returns)
     static async find(ProjectID: number): Promise<Project | null> {
         try {
             const [rows] = await pool.query<RowDataPacket[]>(
@@ -122,7 +121,6 @@ export class Project {
         }
     }
     // Save method to insert or update a project if it's dirty
-    //TODO s3
     async save(): Promise<Project> {
         if (!this._isDirty) return this;
 
@@ -231,6 +229,7 @@ export class ProjectFile {
         this._isDirectory = IsDirectory;
         this._creationDate = CreationDate;
         this._data = data;
+        this._isDirty = FileID === null;
     }
     toJSON(): string {
         return JSON.stringify({
